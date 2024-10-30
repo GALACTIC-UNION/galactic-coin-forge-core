@@ -1,0 +1,25 @@
+{
+    "app": {
+        "port": 8000,
+        "env": "production",
+        "apiPrefix": "/api/v1"
+    },
+    "db": {
+        "host": "prod-db-host",
+        "port": 27017,
+        "name": "myapp_prod",
+        "user": "prod_user",
+        "password": "prod_password"
+    },
+    "jwt": {
+        "secret": "your_production_jwt_secret",
+        "expiresIn": "1h"
+    },
+    "logging": {
+        "level": "error",
+        "file": "logs/app_prod.log"
+    },
+    "thirdParty": {
+        "serviceApiKey": "your_production_service_api_key"
+    }
+}
