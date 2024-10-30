@@ -1,0 +1,21 @@
+class Transaction:
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.id = hashlib.sha256(f"{sender.id}{receiver.id}{amount}".encode()).hexdigest()
+
+    def execute(self):
+        if self.sender.balance >= self.amount:
+            self.sender.withdraw(self.amount)
+            self.receiver.deposit(self.amount)
+            print(f"Transaction {self.id} executed: {self.amount} coins sent from {self.sender.id} to {self.receiver.id}")
+        else:
+            print("Transaction failed: insufficient funds")
+
+# Contoh penggunaan
+sender = Wallet()
+receiver = Wallet()
+sender.deposit(100)
+transaction = Transaction(sender, receiver, 50)
+transaction.execute()
