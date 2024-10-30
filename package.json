@@ -1,0 +1,33 @@
+{
+  "name": "galactic-coin-forge-core",
+  "version": "1.0.0",
+  "description": "A decentralized cryptocurrency platform for creating and managing digital assets.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "pkg . --out build/binaries/galactic-coin-forge",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.7.1",
+    "jsonwebtoken": "^8.5.1",
+    "commander": "^8.1.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "pkg": "^5.8.0"
+  },
+  "author": "KOSASIH",
+  "license": "Apache 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GALACTIC-UNION/galactic-coin-forge-core.git"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "blockchain",
+    "decentralized",
+    "digital assets"
+  ]
+}
