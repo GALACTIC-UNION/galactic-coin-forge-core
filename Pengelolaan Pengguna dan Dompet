@@ -1,0 +1,28 @@
+import hashlib
+import uuid
+
+class User:
+    def __init__(self, username):
+        self.username = username
+        self.wallet = Wallet()
+
+class Wallet:
+    def __init__(self):
+        self.id = uuid.uuid4()
+        self.balance = 0.0
+
+    def deposit(self, amount):
+        self.balance += amount
+        print(f"Deposited {amount} coins. New balance: {self.balance}")
+
+    def withdraw(self, amount):
+        if self.balance >= amount:
+            self.balance -= amount
+            print(f"Withdrawn {amount} coins. New balance: {self.balance}")
+        else:
+            print("Insufficient funds")
+
+# Contoh penggunaan
+user = User("GalacticUser")
+user.wallet.deposit(100)
+user.wallet.withdraw(30)

@@ -1,0 +1,17 @@
+class GalacticCoin:
+    def __init__(self, name, symbol, total_supply):
+        self.name = name
+        self.symbol = symbol
+        self.total_supply = total_supply
+        self.circulating_supply = 0
+    
+    def mint(self, amount):
+        if self.circulating_supply + amount <= self.total_supply:
+            self.circulating_supply += amount
+            print(f"Minted {amount} {self.symbol}. Total supply: {self.circulating_supply}")
+        else:
+            print("Cannot mint beyond total supply")
+
+# Contoh penggunaan
+galactic_coin = GalacticCoin("Galactic Credit", "GC", 1000000)
+galactic_coin.mint(5000)

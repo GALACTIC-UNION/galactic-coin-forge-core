@@ -1,0 +1,37 @@
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+import os
+
+class SecureStorage:
+    def __init__(self, password):
+        self.key = self.derive_key(password)
+        self.nonce = os.urandom(16)  # IV atau Nonce untuk keamanan
+
+    def derive_key(self, password):
+        salt = os.urandom(16)
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=salt,
+            iterations=100000,
+            backend=default_backend()
+        )
+        return kdf.derive(password.encode())
+
+    def encrypt(self, data):
+        cipher = Cipher(algorithms.AES(self.key), modes.GCM(self.nonce), backend=default_backend())
+        encryptor = cipher.encryptor()
+        return encryptor.update(data.encode()) + encryptor.finalize()
+
+    def decrypt(self, encrypted_data):
+        cipher = Cipher(algorithms.AES(self.key), modes.GCM(self.nonce), backend=default_backend())
+        decryptor = cipher.decryptor()
+        return decryptor.update(encrypted_data) + decryptor.finalize()
+
+# Contoh Penggunaan
+storage = SecureStorage("super_secure_password")
+encrypted_data = storage.encrypt("Sensitive transaction data")
+decrypted_data = storage.decrypt(encrypted_data)
+print(decrypted_data.decode())

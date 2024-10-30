@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MultiSigWallet {
+    uint256 public required;
+    address[] public owners;
+    mapping(address => bool) public isOwner;
+    mapping(uint256 => mapping(address => bool)) public confirmations;
+
+    struct Transaction {
+        address to;
+        uint256 value;
+        bool executed;
+    }
+
+    Transaction[] public transactions;
+
+    modifier onlyOwner() {
+        require(isOwner[msg.sender], "Not an owner");
+        _;
+    }
+
+    constructor(address[] memory _owners, uint256 _required) {
+        require(_owners.length > 0, "Owners required");
+        require(_required <= _owners.length, "Invalid required number of confirmations");
+
+        for (uint i = 0; i < _owners.length; i++) {
+            isOwner[_owners[i]] = true;
+        }
+        owners = _owners;
+        required = _required;
+    }
+
+    function submitTransaction(address to, uint256 value) public onlyOwner {
+        uint256 txIndex = transactions.length;
+        transactions.push(Transaction({to: to, value: value, executed: false}));
+        confirmTransaction(txIndex);
+    }
+
+    function confirmTransaction(uint256 txIndex) public onlyOwner {
+        require(!confirmations[txIndex][msg.sender], "Already confirmed");
+        confirmations[txIndex][msg.sender] = true;
+        executeTransaction(txIndex);
+    }
+
+    function executeTransaction(uint256 txIndex) public onlyOwner {
+        Transaction storage txn = transactions[txIndex];
+        uint256 count = 0;
+        for (uint i = 0; i < owners.length; i++) {
+            if (confirmations[txIndex][owners[i]]) count += 1;
+        }
+        require(count >= required, "Not enough confirmations");
+        require(!txn.executed, "Transaction already executed");
+        txn.executed = true;
+        payable(txn.to).transfer(txn.value);
+    }
+}

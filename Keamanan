@@ -1,0 +1,7 @@
+def secure_hash(data):
+    return hashlib.sha256(data.encode()).hexdigest()
+
+# Contoh penggunaan hashing untuk transaksi ID
+transaction_data = f"{sender.id}{receiver.id}{50}"
+transaction_hash = secure_hash(transaction_data)
+print(f"Transaction hash: {transaction_hash}")
