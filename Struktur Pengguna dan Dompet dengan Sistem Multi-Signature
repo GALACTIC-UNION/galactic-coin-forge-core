@@ -1,0 +1,41 @@
+import hashlib
+import uuid
+import secrets
+
+class User:
+    def __init__(self, username, public_key, private_key):
+        self.username = username
+        self.wallet = Wallet()
+        self.public_key = public_key
+        self.private_key = private_key
+
+class Wallet:
+    def __init__(self):
+        self.id = uuid.uuid4()
+        self.balance = 0.0
+        self.owners = set()
+        self.required_signatures = 2  # Set jumlah tanda tangan yang diperlukan
+        self.pending_transactions = {}
+
+    def add_owner(self, user):
+        self.owners.add(user)
+
+    def deposit(self, amount):
+        self.balance += amount
+
+    def withdraw(self, amount, signatures):
+        if self.balance >= amount and len(signatures) >= self.required_signatures:
+            self.balance -= amount
+        else:
+            raise ValueError("Insufficient funds or insufficient signatures")
+
+# Pembuatan kunci kriptografi asimetris untuk tiap pengguna
+def generate_keys():
+    private_key = secrets.token_bytes(32)
+    public_key = hashlib.sha256(private_key).hexdigest()
+    return private_key, public_key
+
+# Contoh Penggunaan
+private_key, public_key = generate_keys()
+user = User("GalacticUser", public_key, private_key)
+user.wallet.add_owner(user)
