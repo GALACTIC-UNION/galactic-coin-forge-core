@@ -1,2 +1,23 @@
-# Google App Engine generated folder
-appengine-generated/
+# .gitignore
+
+# Node.js dependencies
+node_modules/
+
+# Build artifacts
+build/
+dist/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.vscode/
+.idea/
