@@ -1,0 +1,25 @@
+{
+    "app": {
+        "port": 3000,
+        "env": "development",
+        "apiPrefix": "/api/v1"
+    },
+    "db": {
+        "host": "localhost",
+        "port": 27017,
+        "name": "myapp_dev",
+        "user": "",
+        "password": ""
+    },
+    "jwt": {
+        "secret": "your_jwt_secret",
+        "expiresIn": "1h"
+    },
+    "logging": {
+        "level": "debug",
+        "file": "logs/app.log"
+    },
+    "thirdParty": {
+        "serviceApiKey": "your_service_api_key"
+    }
+}
