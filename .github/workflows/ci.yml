@@ -1,0 +1,88 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify the Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Linter
+        run: npm run lint  # Assuming you have a lint script defined in package.json
+
+      - name: Run Unit Tests
+        run: npm test  # Assuming you have a test script defined in package.json
+
+      - name: Build Application
+        run: npm run build  # Assuming you have a build script defined in package.json
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: build  # This job depends on the build job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Integration Tests
+        run: npm run test:integration  # Assuming you have an integration test script
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: integration-tests  # This job depends on the integration-tests job
+    if: github.ref == 'refs/heads/main'  # Only deploy from the main branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to Production
+        run: npm run deploy  # Assuming you have a deploy script defined in package.json
+        env:
+          NODE_ENV: production
+          DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}  # Use GitHub Secrets for sensitive data
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: deploy  # This job depends on the deploy job
+
+    steps:
+      - name: Notify Deployment Success
+        run: |
+          echo "Deployment to production was successful!"
+          # You can integrate with Slack, Discord, or any other notification service here
